@@ -14,9 +14,21 @@ const vite = await createViteServer({
 });
 app.use(vite.middlewares);
 
+// Read prompt content from file
+const getPromptInstructions = () => {
+  try {
+    return fs.readFileSync("./prompt.md", "utf-8");
+  } catch (error) {
+    console.warn("Could not read prompt.md, using default instructions:", error);
+    return "You are a helpful assistant that can answer questions and help with tasks.";
+  }
+};
+
 // API route for token generation
 app.get("/token", async (req, res) => {
   try {
+    const instructions = getPromptInstructions();
+    
     const response = await fetch(
       "https://api.openai.com/v1/realtime/sessions",
       {
@@ -27,7 +39,9 @@ app.get("/token", async (req, res) => {
         },
         body: JSON.stringify({
           model: "gpt-4o-realtime-preview-2025-06-03",
-          voice: "verse",
+          // alloy, ash, ballad, coral, echo, sage, shimmer, and verse
+          voice: "shimmer",
+          instructions: instructions,
         }),
       },
     );
