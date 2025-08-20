@@ -42,6 +42,14 @@ app.get("/token", async (req, res) => {
           // alloy, ash, ballad, coral, echo, sage, shimmer, and verse
           voice: "shimmer",
           instructions: instructions,
+          turn_detection: {
+            type: "server_vad",
+            threshold: 1,
+            prefix_padding_ms: 500,
+            silence_duration_ms: 800,
+            create_response: true,
+            interrupt_response: true,
+          },
         }),
       },
     );
